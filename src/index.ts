@@ -27,6 +27,10 @@ let id = 0;
 
 let wavesInstance: Waves | null = null;
 
+const isMobile = 'ontouchstart' in document.documentElement;
+
+const eventType = isMobile ? 'touchstart' : 'mousedown';
+
 const createId = () => `${++id}`;
 
 const markTargetMap: { [id: string]: Element } = {};
@@ -129,13 +133,19 @@ const getTarget = (el: Element, markId: string): Element | null => {
 };
 
 const handler = (evt: Event) => {
-  const e = (evt as MouseEvent);
-  if (e.button !== 0) return;
+  const e = (evt as MouseEvent & TouchEvent);
+  if (!isMobile && e.button !== 0) return;
   const el = e.target as Element;
   const markId = attr(el, MARK_ID) || '';
   const target = getTarget(el, markId);
   if (!target || checkAttr(`${attr(target, 'disabled')}`)) return;
-  const wavesParams = computeWavesParams(e.clientX, e.clientY, markId, target);
+  let { clientX, clientY } = e;
+  if (isMobile) {
+    const item = e.touches[0];
+    clientX = item.clientX;
+    clientY = item.clientY;
+  }
+  const wavesParams = computeWavesParams(clientX, clientY, markId, target);
   const waves = createWaves(wavesParams);
   const { pkg, box } = wavesParams;
   attr(target, ACTIVE, '');
@@ -161,12 +171,12 @@ export default class Waves {
     if ('animation' in docEl.style) {
       this.mainColor = mainColor;
       wavesInstance = this;
-      on(window, 'mousedown', handler);
+      on(window, eventType, handler);
       attr(docEl, SUPPORT, 'true');
     }
   }
 
   destroy() {
-    off(window, 'mousedown', handler);
+    off(window, eventType, handler);
   }
 }
