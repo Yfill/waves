@@ -1,0 +1,109 @@
+$mainBgColor: rgba(8, 135, 253, 0.2);
+$lightBgColor: rgba(0, 0, 0, 0.12);
+$darkBgColor: rgba(255, 255, 255, 0.12);
+$defaultBgColor: $lightBgColor;
+$prefix: y-waves;
+$logo: $prefix;
+$main: #{$prefix}-main;
+$light: #{$prefix}-light;
+$dark: #{$prefix}-dark;
+$item: #{$prefix}-item;
+$markId: #{$prefix}-mark-id;
+$box: #{$prefix}-item-box;
+$boxInner: #{$prefix}-item-box-inner;
+$support: #{$prefix}-support;
+$active: #{$prefix}-active;
+$boxShadow: #{$prefix}-box-shadow;
+@keyframes waves {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+
+  70% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+[#{$support}] {
+  [#{$logo}],
+  [#{$light}],
+  [#{$dark}],
+  [#{$main}] {
+    cursor: pointer;
+    user-select: none;
+    -ms-user-select: none;
+  }
+}
+[#{$boxShadow}] {
+  $color: rgb(0, 0, 0);
+  transition: box-shadow 0.3s;
+  box-shadow: 0 3px 1px -2px rgba($color, 0.2), 0 2px 2px 0 rgba($color, 0.14), 0 1px 5px 0 rgba($color, 0.12);
+  &[#{$active}] {
+    box-shadow: 0 5px 5px -3px rgba($color, 0.2), 0 8px 10px 1px rgba($color, 0.14), 0 3px 14px 2px rgba($color, 0.12);
+  }
+}
+[#{$box}] {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -ms-user-select: none;
+}
+[#{$boxInner}] {
+  position: absolute;
+  overflow: hidden;
+  display: block;
+}
+[#{$item}] {
+  position: absolute;
+  display: block;
+  background-color: $defaultBgColor;
+  animation: waves 0.78s ease-out forwards;
+  border-radius: 50%;
+  z-index: 0;
+}
+[#{$light}] {
+  > [#{$box}] {
+    [#{$item}] {
+      background-color: $darkBgColor;
+    }
+  }
+}
+[#{$dark}] {
+  > [#{$box}] {
+    [#{$item}] {
+      background-color: $lightBgColor;
+    }
+  }
+}
+[#{$main}] {
+  > [#{$box}] {
+    [#{$item}] {
+      background-color: $mainBgColor;
+    }
+  }
+}
+[enable-css-variables] {
+  [#{$main}] {
+    > [#{$box}] {
+      [#{$item}] {
+        background-color: var(--background-color-main-9-a);
+      }
+    }
+  }
+}
+[theme-mode="light"] {
+  [#{$item}] {
+    background-color: $lightBgColor;
+  }
+}
+[theme-mode="dark"] {
+  [#{$item}] {
+    background-color: $darkBgColor;
+  }
+}
