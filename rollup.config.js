@@ -5,6 +5,7 @@ import babel from '@rollup/plugin-babel';
 import sass from 'rollup-plugin-sass';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
+import pkg from './package.json';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const basePlugins = [
@@ -37,6 +38,7 @@ export default {
     format: 'umd',
     file: isProduction ? 'dist/index.js' : 'node_modules/.waves/dist/index.js',
     sourcemap: !isProduction,
+    banner: `/*! ${pkg.name} v${pkg.version} | ${new Date().toGMTString()} | ${pkg.homepage} */`,
   },
   plugins: [
     ...basePlugins,
