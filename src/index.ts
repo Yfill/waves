@@ -29,8 +29,6 @@ let wavesInstance: Waves | null = null;
 
 const isMobile = 'ontouchstart' in document.documentElement;
 
-const eventType = isMobile ? 'touchstart' : 'mousedown';
-
 const createId = () => `${++id}`;
 
 const markTargetMap: { [id: string]: Element } = {};
@@ -148,8 +146,9 @@ const handler = (evt: Event) => {
   const wavesParams = computeWavesParams(clientX, clientY, markId, target);
   const waves = createWaves(wavesParams);
   const { pkg, box } = wavesParams;
+  const type = isMobile ? 'touchend' : 'mouseup';
   attr(target, ACTIVE, '');
-  on(window, 'mouseup', () => removeAttr(target, ACTIVE), { once: true });
+  on(window, type, () => removeAttr(target, ACTIVE), { once: true });
   attr(pkg, 'style', computePkgStyle(target, box));
   pkg.appendChild(waves);
 };
@@ -169,6 +168,7 @@ export default class Waves {
     if (wavesInstance) return wavesInstance;
     const docEl = document.documentElement;
     if ('animation' in docEl.style) {
+      const eventType = isMobile ? 'touchstart' : 'mousedown';
       this.mainColor = mainColor;
       wavesInstance = this;
       on(window, eventType, handler);
@@ -177,6 +177,7 @@ export default class Waves {
   }
 
   destroy() {
+    const eventType = isMobile ? 'touchstart' : 'mousedown';
     off(window, eventType, handler);
   }
 }
