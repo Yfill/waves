@@ -149,7 +149,12 @@ const handler = (evt: Event) => {
   const type = isMobile ? 'touchend' : 'mouseup';
   attr(target, ACTIVE, '');
   on(window, type, (event: Event) => {
-    if (isMobile) event.preventDefault();
+    if (isMobile) {
+      event.preventDefault();
+      const clickEvent = document.createEvent('MouseEvent');
+      clickEvent.initEvent('click', true, true);
+      target.dispatchEvent(clickEvent);
+    }
     removeAttr(target, ACTIVE);
   }, { once: true });
   attr(pkg, 'style', computePkgStyle(target, box));
