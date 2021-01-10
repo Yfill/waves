@@ -148,7 +148,10 @@ const handler = (evt: Event) => {
   const { pkg, box } = wavesParams;
   const type = isMobile ? 'touchend' : 'mouseup';
   attr(target, ACTIVE, '');
-  on(window, type, () => removeAttr(target, ACTIVE), { once: true });
+  on(window, type, (event: Event) => {
+    if (isMobile) event.preventDefault();
+    removeAttr(target, ACTIVE);
+  }, { once: true });
   attr(pkg, 'style', computePkgStyle(target, box));
   pkg.appendChild(waves);
 };
